@@ -1,6 +1,24 @@
 # UnityAndMySQLAndExcelTest
 
+このプロジェクトを動かすためには以下のライブラリが必要になります。
 
+Unity
+
+- [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp) (v2)
+- [MasterMemory](https://github.com/Cysharp/MasterMemory) (v2)
+- MySql.Data.DLL と依存する DLL を Plugins フォルダに入れる
+- NPOI.DLL と依存する DLL を Plugins フォルダに入れる
+
+Excel Addin
+
+- MySql.Data を NuGet で
+- NPOI を NuGet で
+
+Unity の Plugins に入れる DLL がわからない場合。  
+VisualStudio 等で空のクラスライブラリ等のプロジェクトを作成し、参照に NuGet でダウンロードします。  
+そうするとプロジェクトの packages フォルダに色々入ってきているので、各ライブラリの lib の中の良さげなバージョンの DLL を持ってきましょう。
+
+====================
 The MIT License (MIT)
 
 Copyright (c) 2020 sakabadev
