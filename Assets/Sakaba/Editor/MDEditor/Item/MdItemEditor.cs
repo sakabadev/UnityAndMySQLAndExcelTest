@@ -28,11 +28,6 @@ namespace Sakaba.MDEditor
 
         private void OnGUI()
         {
-            if (isDirty && GUILayout.Button("Save", GUILayout.Width(140), GUILayout.Height(28)))
-            {
-                SetMDDirty("Standard Editor Change");
-            }
-            
             selectedTabIndex = GUILayout.Toolbar(selectedTabIndex,
                 new[] { "Item", "ItemTier" });
             if (selectedTabIndex >= 0 && selectedTabIndex < tabs.Count)
@@ -54,6 +49,9 @@ namespace Sakaba.MDEditor
                 }
                 
                 prevSelectedTabIndex = selectedTabIndex;
+                
+                if (isDirty && GUILayout.Button("Save", GUILayout.Width(140), GUILayout.Height(28)))
+                    SetMDDirty("Standard Editor Change");
             }
         }
     }

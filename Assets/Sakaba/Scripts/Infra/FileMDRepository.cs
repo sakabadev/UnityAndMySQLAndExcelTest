@@ -47,7 +47,7 @@ namespace Sakaba.Infra
                 var db = new MemoryDatabase(
                     new ItemTable(new[] {new UnitItem {id = "100", name = "デフォルトユニット"}}),
                     new ItemTierTable(new [] {new ItemTier()}));
-                Save(db.ToDatabaseBuilder());
+                // Save(db.ToDatabaseBuilder());
                 return db;
             }
             return new MemoryDatabase(bs.bytes);

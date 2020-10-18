@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MessagePack;
 using Sakaba.Domain;
 using UnityEditor;
@@ -55,7 +56,7 @@ namespace Sakaba.MDEditor
             };
         }
 
-        public void ImportTable()
+        public async void ImportTable()
         {
             Debug.Log($"[{nameof(ImportTable)}] Start");
             var items = TableRepository.FindAll<Item>();
@@ -65,18 +66,15 @@ namespace Sakaba.MDEditor
                 MdRepository.Save(null);
 
             var builder = GameDatabase.DB.ToImmutableBuilder();
-            var excepts = GameDatabase.DB.ItemTable.All.Select(x => x.id).ToArray();
-            excepts = excepts.Except(items.Select(x => x.id).ToArray()).ToArray();
-            
-            // 使っていないIdの削除
-            builder.RemoveItem(excepts);
-            // データ更新
-            builder.Diff(items.ToArray());
+            // データ差し替え
+            builder.ReplaceAll(items.ToArray());
             
             // Editorの一時保存してるDBを更新
             MDEditorBase.TempMD = builder.Build();
             // 本番用DBも更新
             MdRepository.Save(MDEditorBase.TempMD.ToDatabaseBuilder());
+            await Task.Delay(1);
+            GameDatabase.Reload();
             
             CreateItemList();
             Debug.Log($"[{nameof(ImportTable)}] End");

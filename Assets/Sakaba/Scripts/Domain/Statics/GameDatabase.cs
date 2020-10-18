@@ -15,21 +15,7 @@ namespace Sakaba.Domain {
                 if (cache == null || isDirty) {
                     if(repo == null)
                         repo = new FileMDRepository();
-
-                    try
-                    {
-                        cache = repo.Load();
-                        // nullならわざとエラーを出す
-                        Debug.Log($"DB is {cache.ItemTable.Count}");
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogException(e);
-                    }
-                    finally
-                    {
-                        isDirty = false;
-                    }
+                    Reload();
                 }
                 return cache;
             }
@@ -38,6 +24,26 @@ namespace Sakaba.Domain {
         public static void SetDirty()
         {
             isDirty = true;
+        }
+
+        public static void Reload()
+        {
+            
+            
+            try
+            {
+                cache = repo.Load();
+                // nullならわざとエラーを出す
+                Debug.Log($"DB is {cache.ItemTable.Count}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+            finally
+            {
+                isDirty = false;
+            }
         }
     }
 }

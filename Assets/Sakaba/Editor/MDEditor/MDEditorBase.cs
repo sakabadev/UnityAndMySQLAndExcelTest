@@ -28,8 +28,7 @@ namespace Sakaba.MDEditor
             var builder = TempMD.ToDatabaseBuilder();
             repo.Save(builder);
             GameDatabase.SetDirty();
-            var db = GameDatabase.DB; // DBの更新
-
+            GameDatabase.Reload();
             isDirty = false;
         }
     }

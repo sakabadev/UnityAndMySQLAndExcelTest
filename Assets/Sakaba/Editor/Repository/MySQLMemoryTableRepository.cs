@@ -32,7 +32,7 @@ namespace Sakaba.Infra
             Type thisType = item.GetType();
             
             List<MySqlParameter> sqlParams = new List<MySqlParameter>();
-            var keyDic = EditorHelper.GetFieldNamesFrom<Item>();
+            var keyDic = EditorHelper.GetFieldNamesFrom<T>();
 
             string[] names = keyDic[thisType].ToArray();
 
