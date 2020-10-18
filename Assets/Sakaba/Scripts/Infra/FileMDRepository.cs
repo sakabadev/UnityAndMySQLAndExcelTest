@@ -35,6 +35,7 @@ namespace Sakaba.Infra
             {
                 builder.WriteToStream(fs);
             }
+            AssetDatabase.Refresh();
         }
 #endif
 

@@ -65,6 +65,10 @@ namespace Sakaba.MDEditor
                 MdRepository.Save(null);
 
             var builder = GameDatabase.DB.ToImmutableBuilder();
+            var excepts = GameDatabase.DB.ItemTierTable.All.Select(x => x.id).ToArray();
+            excepts = excepts.Except(items.Select(x => x.id).ToArray()).ToArray();
+            // 無いIdのものを削除
+            builder.RemoveItemTier(excepts);
             // データ差し替え
             builder.ReplaceAll(items.ToArray());
 
