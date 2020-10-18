@@ -35,8 +35,7 @@ namespace Sakaba.MDEditor
                 MDEditorBase.TempMD = new MD.MemoryDatabase(builder.Build());
             }
             
-            if (items == null)
-                items = new List<ItemTier>(MDEditorBase.TempMD.ItemTierTable.All);
+            items = new List<ItemTier>(MDEditorBase.TempMD.ItemTierTable.All);
 
             itemList = new ReorderableList(items, typeof(ItemTier), false, true, false, false);
             // ヘッダーの描画設定
@@ -73,9 +72,12 @@ namespace Sakaba.MDEditor
             MDEditorBase.TempMD = builder.Build();
             // 本番用DBも更新
             MdRepository.Save(MDEditorBase.TempMD.ToDatabaseBuilder());
+            
+            // Fileにセーブ直後にReloadでFileを読み込もうとすると動作不安定感があったためDelay
             await Task.Delay(1);
             GameDatabase.Reload();
-            
+
+            current = null;
             CreateList();
             Debug.Log($"[{nameof(ImportTable)}] End");
         }

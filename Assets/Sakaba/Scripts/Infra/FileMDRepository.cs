@@ -5,6 +5,7 @@ using UnityEngine;
 
 #if UNITY_EDITOR
 using System.IO;
+using UnityEditor;
 #endif
 
 namespace Sakaba.Infra
@@ -40,8 +41,16 @@ namespace Sakaba.Infra
         public MemoryDatabase Load()
         {
             Debug.Log($"[Load DB] from {DIR_PATH + DATABASE_FILENAME}");
-            var bs = Resources.Load<TextAsset>(DATABASE_NAME);
-            if (bs == null)
+            TextAsset ta;
+            
+#if UNITY_EDITOR
+            // Scriptのリビルド等の時にResourcesだとAssetが読み込めないパターンが何回かあったため
+            ta = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Sakaba/Resources/" + DATABASE_FILENAME);
+#else
+            ta = Resources.Load<TextAsset>(DATABASE_NAME);
+#endif
+            
+            if (ta == null)
             {
                 Debug.Log($"{DATABASE_NAME} == null");
                 var db = new MemoryDatabase(
@@ -50,7 +59,7 @@ namespace Sakaba.Infra
                 // Save(db.ToDatabaseBuilder());
                 return db;
             }
-            return new MemoryDatabase(bs.bytes);
+            return new MemoryDatabase(ta.bytes);
         }
     }
 }

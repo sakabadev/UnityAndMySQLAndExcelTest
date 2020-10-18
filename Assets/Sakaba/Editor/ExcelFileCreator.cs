@@ -76,14 +76,13 @@ namespace Sakaba.Editor
             if (GUILayout.Button ("create table to MySql", GUILayout.Height(40))
             && EditorUtility.DisplayDialog("CREATEの前にDROP TABLEします", "フィールドを追加したい場合は各シートをコミットで行われます。", "おーけー", "きゃんせる"))
             {
-                Debug.Log($"{nameof(CreateTableForMySql)} : start");
                 CreateTableForMySql(memoryTableTypes[current]);
-                Debug.Log($"{nameof(CreateTableForMySql)} : end");
             }
         }
 
         void CreateTableForMySql(Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>> sheetTypes)
         {
+            Debug.Log($"{nameof(CreateTableForMySql)} : start");
             foreach (var sheetType in sheetTypes)
             {
                 string tableName = sheetType.Key.Name.ToLowercaseNamingConvention(true);
@@ -100,6 +99,7 @@ namespace Sakaba.Editor
                 Debug.Log("CreateConfigTable: " + sql);
                 MySQLHelper.Execute(sql, null);
             }
+            Debug.Log($"{nameof(CreateTableForMySql)} : end");
         }
 
         string GenerateCreateTableSql(string tableName, IEnumerable<IGrouping<Type, FieldInfo>> group) {
