@@ -16,31 +16,31 @@ namespace Sakaba.Domain {
 #if UNITY_EDITOR
         [ColumnConfigAttribute(sortLabel = "キー", columnWidth = 20, preferExcel = 1)]
         [AddColumnType("varchar(50)","NOT NULL")]
-        public string id;
 #endif
+        public string id;
         
 #if UNITY_EDITOR
         [ColumnConfigAttribute(sortLabel="名前", preferExcel = 1)]
         [AddColumnType("varchar(50)","NOT NULL")]
-        public string name;
 #endif
+        public string name;
         
 #if UNITY_EDITOR
         [ColumnConfigAttribute(sortLabel = "説明", columnWidth = 200, preferExcel = 1)]
         [AddColumnType("varchar(255)","NULL")]
-        public string text;
 #endif
+        public string text;
         
 #if UNITY_EDITOR
         [ColumnConfigAttribute(sortLabel = "アイコンパス")]
         [AddColumnType("varchar(255)","NULL")]
-        public string icon;
 #endif
+        public string icon;
         
         [PrimaryKey, IgnoreMember]
         public string Id => id;
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         public virtual void Draw()
         {
             using (new GUILayout.VerticalScope(GUI.skin.box, GUILayout.MaxWidth(500)))
@@ -51,7 +51,7 @@ namespace Sakaba.Domain {
                 icon = EditorGUILayout.TextField("アイコンパス", icon);
             }
         }
-        #endif
+#endif
     }
 
     [MessagePackObject(true)]
