@@ -14,25 +14,25 @@ namespace Sakaba.Domain {
 	public abstract class Item
     {
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel = "キー", columnWidth = 20, preferExcel = 1)]
+        [ColumnConfig(sortLabel = "キー", columnWidth = 20, preferExcel = 1)]
         [AddColumnType("varchar(50)","NOT NULL")]
 #endif
         public string id;
         
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel="名前", preferExcel = 1)]
+        [ColumnConfig(sortLabel="名前", preferExcel = 1)]
         [AddColumnType("varchar(50)","NOT NULL")]
 #endif
         public string name;
         
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel = "説明", columnWidth = 200, preferExcel = 1)]
+        [ColumnConfig(sortLabel = "説明", columnWidth = 200, preferExcel = 1)]
         [AddColumnType("varchar(255)","NULL")]
 #endif
         public string text;
         
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel = "アイコンパス")]
+        [ColumnConfig(sortLabel = "アイコンパス")]
         [AddColumnType("varchar(255)","NULL")]
 #endif
         public string icon;
@@ -58,13 +58,13 @@ namespace Sakaba.Domain {
     public class UnitItem : Item
     {
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel ="HP", columnWidth = 20, preferExcel = 1)]
+        [ColumnConfig(sortLabel ="HP", columnWidth = 20, preferExcel = 1)]
         [AddColumnType("int(11)","NOT NULL")]
 #endif
         public int hp;
         
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel ="攻撃力", columnWidth = 20, preferExcel = 1)]
+        [ColumnConfig(sortLabel ="攻撃力", columnWidth = 20, preferExcel = 1)]
         [AddColumnType("int(11)","NOT NULL")]
 #endif
         public int attack;
@@ -87,7 +87,7 @@ namespace Sakaba.Domain {
     public class EquipItem : Item
     {
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel ="Stat変更Objリスト", columnWidth = 200)]
+        [ColumnConfig(sortLabel ="Stat変更Objリスト", columnWidth = 200)]
         [AddColumnType("varchar(255)", "NULL")]
 #endif
         public StatModifier[] modifiers;

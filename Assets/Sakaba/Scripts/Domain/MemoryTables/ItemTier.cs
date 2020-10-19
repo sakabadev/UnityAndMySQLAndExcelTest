@@ -11,19 +11,19 @@ namespace Sakaba.Domain
     public class ItemTier
     {
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel="キー", columnWidth = 20, preferExcel = 1)]
+        [ColumnConfig(sortLabel="キー", columnWidth = 20, preferExcel = 1)]
         [AddColumnType("varchar(50)","NOT NULL")]
 #endif
         public string id;
         
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel="名前", preferExcel = 1)]
+        [ColumnConfig(sortLabel="名前", preferExcel = 1)]
         [AddColumnType("varchar(255)","NOT NULL")]
 #endif
         public string name;
         
 #if UNITY_EDITOR
-        [ColumnConfigAttribute(sortLabel="基礎値段", preferExcel = 1, columnWidth = 20)]
+        [ColumnConfig(sortLabel="基礎値段", preferExcel = 1, columnWidth = 20)]
         [AddColumnType("int(11)","NOT NULL", "DEFAULT 10")]
 #endif
         public int price;
