@@ -8,6 +8,8 @@ Unity と Excel で MySql を介してデータの編集を行います。
 CEDEC2019 の FF14 の NEX の発想を参考にしています。  
 しかし、同期したり差分を取ったり串刺し Lookup したり出来るものではなく、あくまで上記の事がそこそこ楽に出来るようになればいいなぁ程度の目的ですので悪しからず。
 
+[簡単な紹介動画はこちら](https://youtu.be/2JuSoOIIYX0)
+
 ## 必要な知識
 
 - MessagePack-CSharp v2 と MasterMemory v2 の最低限な使い方
