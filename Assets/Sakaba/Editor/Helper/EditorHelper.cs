@@ -141,7 +141,7 @@ namespace Sakaba.Editor
                         var attr = (MemoryTableAttribute)Attribute.GetCustomAttribute(t, typeof(MemoryTableAttribute));
                         if (attr != null)
                         {
-                            Debug.Log($"<color=yellow>Match: {t.Name}</color>");
+                            // Debug.Log($"<color=yellow>Match: {t.Name}</color>");
                             // Abstractのクラスを前もって抽出
                             if (!t.IsAbstract)
                                 notAbstractTypes.Add(t);
