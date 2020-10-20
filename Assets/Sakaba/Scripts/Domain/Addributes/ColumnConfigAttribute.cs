@@ -1,4 +1,5 @@
-﻿namespace Sakaba.Domain
+﻿#if UNITY_EDITOR
+namespace Sakaba.Domain
 {
     [System.AttributeUsage(System.AttributeTargets.Field)]
     public sealed class ColumnConfigAttribute : System.Attribute
@@ -13,3 +14,4 @@
         public string sortLabel = "ラベル";
     }
 }
+#endif
