@@ -124,7 +124,12 @@ namespace Sakaba.Editor
         /// <returns></returns>
         internal static Dictionary<Type, Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>>> GetMemoryTableTypes()
         {
-            Dictionary<Type, Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>>> res = new Dictionary<Type, Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>>>();
+            // <Book, <Sheet, Group<Class, Fields>>>
+            Dictionary<Type, Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>>> res
+                = new Dictionary<Type, Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>>>();
+            
+            List<Type> notAbstractTypes = new List<Type>();
+
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
             {
@@ -136,30 +141,12 @@ namespace Sakaba.Editor
                         var attr = (MemoryTableAttribute)Attribute.GetCustomAttribute(t, typeof(MemoryTableAttribute));
                         if (attr != null)
                         {
-                            // memo: 基底クラスより先にサブクラスが読まれた場合の想定はしてない
-                            
-                            var group = t
-                                .GetFields(BindingFlags.Public | BindingFlags.Instance)
-                                .GroupBy(x => x.DeclaringType);
-
-                            if (group.Count() == 1)
-                            {
-                                res.Add(t, new Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>>());
-                                if(!t.IsAbstract)
-                                    res[t].Add(t, group);
-                            }
+                            Debug.Log($"<color=yellow>Match: {t.Name}</color>");
+                            // Abstractのクラスを前もって抽出
+                            if (!t.IsAbstract)
+                                notAbstractTypes.Add(t);
                             else
-                            {
-                                foreach (var res2 in res)
-                                {
-                                    // どれかの派生クラスだったらそこにAdd
-                                    if (t.IsSubclassOf(res2.Key))
-                                    {
-                                        res2.Value.Add(t, group);
-                                        break;
-                                    }
-                                }
-                            }
+                                res.Add(t, new Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>>());
                         }
                     }
                 }
@@ -167,6 +154,34 @@ namespace Sakaba.Editor
                 {
                     Debug.Log($"{assembly.FullName} failed GetTypes()");
                 }
+            }
+            
+            foreach (var t in notAbstractTypes)
+            {
+                // 親子関係にあるクラス毎にfieldをまとめる。
+                var group = t
+                    .GetFields(BindingFlags.Public | BindingFlags.Instance)
+                    .GroupBy(x => x.DeclaringType);
+
+                bool isSubclass = false;
+                foreach (var res2 in res)
+                {
+                    // 既にリストに載ってるどれかの実装クラスだったらそこにAdd
+                    if (t.IsSubclassOf(res2.Key))
+                    {
+                        // Debug.Log($"<color=green>{t.Name} is SubClass {res2.Key.Name} and Add</color>");
+                        res2.Value.Add(t, group);
+                        isSubclass = true;
+                        break;
+                    }
+                }
+                
+                if(isSubclass) continue;
+
+                // 新参ものだったらKeyから作る
+                res.Add(t, new Dictionary<Type, IEnumerable<IGrouping<Type, FieldInfo>>>());
+                res[t].Add(t, group);
+                // Debug.Log($"<color=blue>Add: {t.Name}</color>");
             }
             return res;
         }
