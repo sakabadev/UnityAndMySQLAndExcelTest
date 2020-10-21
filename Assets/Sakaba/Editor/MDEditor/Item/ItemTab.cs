@@ -61,13 +61,13 @@ namespace Sakaba.MDEditor
             using (new GUILayout.HorizontalScope())
             {
                 if (GUILayout.Button("Import", GUILayout.Width(140), GUILayout.Height(28)))
-                    MDEditorBase.UseCase.ImportTable<ItemTier>(
+                    MDEditorBase.UseCase.ImportTable<Item>(  // 1
                         (builder, list) =>
                         {
-                            var excepts = GameDatabase.DB.ItemTable.All.Select(x => x.id).ToArray();
+                            var excepts = GameDatabase.DB.ItemTable.All.Select(x => x.id).ToArray();  // 2
                             excepts = excepts.Except(items.Select(x => x.id).ToArray()).ToArray();
                             // 無いIdのものを削除
-                            builder.RemoveItem(excepts);
+                            builder.RemoveItem(excepts); // 3
                             // データ差し替え
                             builder.ReplaceAll(items.ToArray());
                         },
@@ -78,7 +78,7 @@ namespace Sakaba.MDEditor
                         });
 
                 if (GUILayout.Button("Export", GUILayout.Width(140), GUILayout.Height(28)))
-                    MDEditorBase.UseCase.ExportTable( GameDatabase.DB.ItemTierTable.All.ToList());
+                    MDEditorBase.UseCase.ExportTable( GameDatabase.DB.ItemTable.All.ToList());  // 4
             }
             
             using (new GUILayout.HorizontalScope())
