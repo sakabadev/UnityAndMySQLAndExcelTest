@@ -5,6 +5,7 @@ using System.Text;
 using MessagePack;
 using MySql.Data.MySqlClient;
 using Sakaba.Domain;
+using Sakaba.Domain.Helper;
 using Sakaba.Editor;
 using UnityEngine;
 
@@ -40,7 +41,8 @@ namespace Sakaba.Infra
             StringBuilder updateValuesBuilder = new StringBuilder();
             foreach (var n in names)
             {
-                var json = MessagePackSerializer.SerializeToJson(thisType.GetField(n).GetValue(item));
+                string fieldName = n.Camelize();
+                var json = MessagePackSerializer.SerializeToJson(thisType.GetField(fieldName).GetValue(item));
                 json = json.TrimStart('"').TrimEnd('"');
                 
                 valuesBuilder.Append($"@{n}");

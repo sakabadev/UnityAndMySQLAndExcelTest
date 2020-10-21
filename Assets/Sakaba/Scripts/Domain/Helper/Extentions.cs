@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -51,5 +52,20 @@ namespace Sakaba.Domain.Helper
             else
                 return s;
         }
+        
+        public static string Camelize(this string str) {
+            string result = "";
+        
+            string[] strArray = str.Split('_');
+            for (int i = 0; i < strArray.Length; i++)
+            {
+                if(i == 0)
+                    result += strArray[i].Substring(0, 1).ToLower() + strArray[i].Substring(1);
+                else
+                    result += strArray[i].Substring(0, 1).ToUpper() + strArray[i].Substring(1);
+            }
+            return result;
+        }
+
     }
 }
