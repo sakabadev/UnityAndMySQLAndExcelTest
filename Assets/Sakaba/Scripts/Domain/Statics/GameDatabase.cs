@@ -28,8 +28,6 @@ namespace Sakaba.Domain {
 
         public static void Reload()
         {
-            
-            
             try
             {
                 cache = repo.Load();

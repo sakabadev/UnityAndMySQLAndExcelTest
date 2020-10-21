@@ -9,11 +9,15 @@ namespace Sakaba.MDEditor
     {
         public static MemoryDatabase TempMD = null;
         public static bool isDirty;
+        public static MDEditorUseCase UseCase;
         
         void OnEnable() {
-            if (TempMD == null) {
+            if (TempMD == null)
                 TempMD = GameDatabase.DB.ToImmutableBuilder().Build();
-            }
+            
+            if(UseCase == null)
+                UseCase = new MDEditorUseCase();
+            
             OnEnableAfter();
         }
 

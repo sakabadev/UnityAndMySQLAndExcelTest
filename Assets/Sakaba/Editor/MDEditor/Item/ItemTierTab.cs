@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MasterMemory;
 using MessagePack;
 using Sakaba.Domain;
 using UnityEditor;
@@ -54,62 +55,30 @@ namespace Sakaba.MDEditor
                 current = items[itemList.index];
             };
         }
-        
-        public async void ImportTable()
-        {
-            Debug.Log($"[{nameof(ImportTable)}] Start");
-            var items = TableRepository.FindAll<ItemTier>();
-            Debug.Log(MessagePackSerializer.SerializeToJson(items));
-            
-            if(GameDatabase.DB == null)
-                MdRepository.Save(null);
-
-            var builder = GameDatabase.DB.ToImmutableBuilder();
-            var excepts = GameDatabase.DB.ItemTierTable.All.Select(x => x.id).ToArray();
-            excepts = excepts.Except(items.Select(x => x.id).ToArray()).ToArray();
-            // 無いIdのものを削除
-            builder.RemoveItemTier(excepts);
-            // データ差し替え
-            builder.ReplaceAll(items.ToArray());
-
-            // Editorの一時保存してるDBを更新
-            MDEditorBase.TempMD = builder.Build();
-            // 本番用DBも更新
-            MdRepository.Save(MDEditorBase.TempMD.ToDatabaseBuilder());
-            
-            // Fileにセーブ直後にReloadでFileを読み込もうとすると動作不安定感があったためDelay
-            await Task.Delay(1);
-            GameDatabase.Reload();
-
-            current = null;
-            CreateList();
-            Debug.Log($"[{nameof(ImportTable)}] End");
-        }
-        
-        public void ExportTable()
-        {
-            Debug.Log($"[{nameof(ExportTable)}] Start");
-            if (GameDatabase.DB == null)
-            {
-                MdRepository.Save(null);
-                return;
-            }
-            if(GameDatabase.DB.ItemTierTable == null)
-                return;
-            
-            TableRepository.SaveAll(GameDatabase.DB.ItemTierTable.All.ToList());
-            Debug.Log($"[{nameof(ExportTable)}] End");
-        }
 
         public override void Draw()
         {
             using (new GUILayout.HorizontalScope())
             {
                 if (GUILayout.Button("Import", GUILayout.Width(140), GUILayout.Height(28)))
-                    ImportTable();
+                    MDEditorBase.UseCase.ImportTable<ItemTier>(
+                        (builder, list) =>
+                        {
+                            var excepts = GameDatabase.DB.ItemTierTable.All.Select(x => x.id).ToArray();
+                            excepts = excepts.Except(items.Select(x => x.id).ToArray()).ToArray();
+                            // 無いIdのものを削除
+                            builder.RemoveItemTier(excepts);
+                            // データ差し替え
+                            builder.ReplaceAll(items.ToArray());
+                        },
+                        () =>
+                        {
+                            current = null;
+                            CreateList();
+                        });
 
                 if (GUILayout.Button("Export", GUILayout.Width(140), GUILayout.Height(28)))
-                    ExportTable();
+                    MDEditorBase.UseCase.ExportTable( GameDatabase.DB.ItemTierTable.All.ToList());
             }
 
             using (new GUILayout.HorizontalScope())
