@@ -65,11 +65,11 @@ namespace Sakaba.MDEditor
                         (builder, list) =>
                         {
                             var excepts = GameDatabase.DB.ItemTierTable.All.Select(x => x.id).ToArray();  // 2
-                            excepts = excepts.Except(items.Select(x => x.id).ToArray()).ToArray();
+                            excepts = excepts.Except(list.Select(x => x.id).ToArray()).ToArray();
                             // 無いIdのものを削除
                             builder.RemoveItemTier(excepts);  // 3
                             // データ差し替え
-                            builder.ReplaceAll(items.ToArray());
+                            builder.ReplaceAll(list.ToArray());
                         },
                         () =>
                         {
