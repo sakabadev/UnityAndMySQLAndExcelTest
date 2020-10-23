@@ -52,7 +52,7 @@ VisualStudio 等で空のクラスライブラリ等のプロジェクトを作�
 
 ① Unity と /ExcelAddin/MD2DBFromExcel.Infrastructure の中の MySQLHelper.cs に MySql への接続情報を記述する。
 
-② MemoryTable 属性のある Entity を作り、コードジェネレートする。既存の Entity の属性を参考に属性を書くことと、ついでに値編集用の EditorWindow も作ります。（既に作ってある Item クラスを元に説明します。）
+② MemoryTable 属性のある Entity を作り、コードジェネレートする。既存の Entity の属性を参考に属性を書くことと、ついでに値編集用の EditorWindow も作る。（ここから下は既に作ってある Item クラスを元に説明します。）
 
 ③ UnityEditor 上部の Sakaba/Open ExcelFileCreatorWindow を開き、"update MemoryTable list"を押す。
 
@@ -94,6 +94,8 @@ VisualStudio 等で空のクラスライブラリ等のプロジェクトを作�
 
 ## 注意点
 
+- migration がありません。
+- 列オプションを Excel でいじっても反映されません。
 - Excel ファイルの 1 列目の"key","value"をずらしたり消したりすると正常に処理ができなくなります。
 - 関数が入っているセルから値を取得する処理が未実装なため、まだ関数は使えません。(というか確認していません。)
 - クラスのフィールドの命名規則は sampleTextField です。クエリ作成に影響するためこれで統一です。
