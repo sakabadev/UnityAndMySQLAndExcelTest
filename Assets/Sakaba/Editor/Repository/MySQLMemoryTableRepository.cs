@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using MessagePack;
 using MySql.Data.MySqlClient;
@@ -30,6 +31,11 @@ namespace Sakaba.Infra
 
         (string insert, string update, List<MySqlParameter> sqlParams) GetInsertAndUpdateQuery<T>(T item)
         {
+            // Unionで派生しているfieldだった場合にunionの形式にjsonを作り変えるためのdic;
+            Dictionary<Type, Dictionary<Type, int>> unionDic = new Dictionary<Type, Dictionary<Type, int>>();
+            // Unionで派生していないからチェックがいらないリスト
+            List<Type> ignoreUnionCheckList = new List<Type>();
+            
             Type thisType = item.GetType();
             
             List<MySqlParameter> sqlParams = new List<MySqlParameter>();
@@ -42,9 +48,34 @@ namespace Sakaba.Infra
             foreach (var n in names)
             {
                 string fieldName = n.Camelize();
-                var json = MessagePackSerializer.SerializeToJson(thisType.GetField(fieldName).GetValue(item));
+                FieldInfo gotInfo = thisType.GetField(fieldName);
+                object gotValue = gotInfo.GetValue(item);
+                var json = MessagePackSerializer.SerializeToJson(gotValue);
                 json = json.TrimStart('"').TrimEnd('"');
                 
+                if (gotValue != null)
+                {
+                    // union check
+                    if (!unionDic.ContainsKey(gotInfo.FieldType) 
+                        && !ignoreUnionCheckList.Contains(gotInfo.FieldType))
+                    {
+                        var unions = (UnionAttribute[])Attribute.GetCustomAttributes(gotInfo.FieldType, typeof (UnionAttribute));
+                        if (unions.Length > 0)
+                            unionDic.Add(gotInfo.FieldType, unions.ToDictionary(x => x.SubType, x => x.Key));
+                        else
+                            ignoreUnionCheckList.Add(gotInfo.FieldType);
+                    }
+
+                    // このフィールドがUnionの一つだったら、Unionの型に整形する
+                    if (unionDic.ContainsKey(gotInfo.FieldType))
+                    {
+                        Debug.Log(gotInfo.FieldType.Name);
+                        Debug.Log(gotValue.GetType().Name);
+                        int union = unionDic[gotInfo.FieldType][gotValue.GetType()];
+                        json = $"[{union}, {json}]";
+                    }
+                }
+
                 valuesBuilder.Append($"@{n}");
                 
                 if(n != "idx" || n != "id")
